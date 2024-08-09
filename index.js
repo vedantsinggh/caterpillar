@@ -24,16 +24,28 @@ const drawCircle = (ctx, x, y, radius, color) => {
 	ctx.stroke();
 };
 
-const drawSnake = (ctx, x,y,x2,y2,radius) => {
-	drawCircle(ctx,x,y,radius,"rgb(224 183 247)")
-	drawCircle(ctx,x2,y2,radius, "rgb(224 183 247)");
+const snake = [20,20, 20, 20, 20, 15, 5];
+let pointX =  [1,1,1,1,1,1,1];
+let pointY =  [1,1,1,1,1,1,1];
+const drawSnake = (ctx) => {
+	
+
+	drawCircle(ctx,pointX[0],pointY[0],snake[0],"rgb(224 183 247)")
+	for(let i=1; i < snake.length; i++){
+
+		const dirX = pointX[i-1]- pointX[i];
+		const dirY = pointY[i-1]- pointY[i];
+		const mag  = Math.sqrt(Math.pow(dirX,2) + Math.pow(dirY,2))
+
+		pointX[i] = mag === 0? pointX[i] :pointX[i-1] - (dirX / mag) * snake[i];
+		pointY[i] = mag === 0? pointY[i] : pointY[i-1] - (dirY / mag) * snake[i];
+
+		drawCircle(ctx,pointX[i],pointY[i],snake[i], "rgb(224 183 247)");
+	}
 };
 
 const dx = 100;
 const dy = 100;
-const radius = 20;
-let x = 0, y = 0;
-let x2 = 2, y2 = 2;
 let tarX, tarY;
 
 let start;
@@ -41,24 +53,20 @@ function step(timeStamp){
 	if(start === undefined){
 		start = timeStamp;
 	}
-	
-	if(x2 === undefined){
-		console.log("ss")
-	}
 
 	const dt = 0.001 * (timeStamp - start);
 	start = timeStamp;
 
 	const FPS = (1000 / dt);
 
-	if(tarX !== undefined || tarX === x){
-		if(tarX < x) x-= dx * dt;
-		if(tarX > x) x+= dx * dt;
+	if(tarX !== undefined || tarX === pointX[0]){
+		if(tarX < pointX[0]) pointX[0]-= dx * dt;
+		if(tarX > pointX[0]) pointX[0]+= dx * dt;
 	}
 
-	if(tarY !== undefined || tarY === y){
-		if(tarY < y) y-= dy * dt;
-		if(tarY > y) y+= dy * dt;
+	if(tarY !== undefined || tarY === pointY[0]){
+		if(tarY < pointY[0]) pointY[0]-= dy * dt;
+		if(tarY > pointY[0]) pointY[0]+= dy * dt;
 	}
 
 	canvas.onmousemove = (e) => {
@@ -70,14 +78,8 @@ function step(timeStamp){
 	ctx.fillStyle = "rgb(40 40 40)";
 	ctx.fillRect(0,0,800,600);
 
-	const dirX = x - x2;
-	const dirY = y - y2;
-	const mag  = Math.sqrt(Math.pow(dirX,2) + Math.pow(dirY,2))
 
-	x2 = x - (dirX / mag) * radius;
-	y2 = y - (dirY / mag) * radius;
-
-	drawSnake(ctx,x,y,x2,y2,radius)
+	drawSnake(ctx)
 
 	window.requestAnimationFrame(step);
 }

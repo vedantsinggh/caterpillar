@@ -24,7 +24,7 @@ const drawCircle = (ctx, x, y, radius, color) => {
 	ctx.stroke();
 };
 
-const snake = [20,20, 20, 20, 20, 15, 5];
+const snake = [20,20, 20, 20, 20, 100, 20];
 let pointX =  [1,1,1,1,1,1,1];
 let pointY =  [1,1,1,1,1,1,1];
 const drawSnake = (ctx) => {

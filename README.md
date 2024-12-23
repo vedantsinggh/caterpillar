@@ -1,1 +1,4 @@
-# ANIM (dont know what that is)
+# Caterpillar 
+
+A simple caterpillar simulation in JavaScript.\n
+
